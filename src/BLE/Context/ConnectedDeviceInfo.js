@@ -3,7 +3,7 @@ import React, {createContext, useState, useContext} from 'react';
 const ConnectedDeviceInfoContext = createContext();
 
 export default function ConnectedDeviceInfoProvider({children}) {
-  const [connectedDeviceInfo, setConnectedDeviceInfo] = useState();
+  const [connectedDeviceInfo, setConnectedDeviceInfo] = useState({});
 
   return (
     <ConnectedDeviceInfoContext.Provider

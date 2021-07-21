@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Text,
   View,
@@ -8,19 +8,25 @@ import {
 } from 'react-native';
 
 import {useReadMonitor} from '../../BLE/Context/ReadMonitor';
+import {useManager} from '../../BLE/Context/Manager';
 import {styles} from './styles';
 
 const BLEIO = () => {
   const {readMonitor, setReadMonitor} = useReadMonitor();
+  // const {manager} = useManager();
+
+  // useEffect(() => {
+  //   discoverCharacteristics(manager)
+  // });
 
   return (
     <View style={styles.Container}>
       <View style={styles.InputWrapper}>
-        <Text style={styles.Title}>Enviar comando</Text>
+        <Text style={styles.Title}>Send command</Text>
         <View style={{flexDirection: 'row'}}>
           <TextInput
             style={styles.Input}
-            placeholder="Insira um comando customizado aqui"
+            placeholder="Enter a custom command here"
           />
           <TouchableOpacity style={styles.SendButton}>
             <Text style={styles.SendButtonText}>{`${'>'}`}</Text>

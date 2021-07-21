@@ -3,7 +3,7 @@ import React, {createContext, useState, useContext} from 'react';
 const ReadMonitorContext = createContext();
 
 export default function ReadMonitorProvider({children}) {
-  const [readMonitor, setReadMonitor] = useState();
+  const [readMonitor, setReadMonitor] = useState([]);
 
   return (
     <ReadMonitorContext.Provider value={{readMonitor, setReadMonitor}}>

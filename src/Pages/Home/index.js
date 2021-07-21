@@ -2,25 +2,59 @@ import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import {useManager} from '../../BLE/Context/Manager';
 import {useConnectedDeviceInfo} from '../../BLE/Context/ConnectedDeviceInfo';
+import {requestLocationPermission} from '../../BLE/RequestPermission';
 import {styles} from './styles';
 
 const Home = ({navigation}) => {
+  const [scannedDevicesState, setScannedDevicesState] = useState([]);
   const {setConnectedDeviceInfo} = useConnectedDeviceInfo();
-  const [scannedDevices, setScannedDevices] = useState([
-    {deviceId: '1d:sd:ab:3c', name: 'Exemplo'},
-    {deviceId: '1d:sd:ab:3c', name: 'Exemplo 2'},
-  ]);
-  const {manager, setManager} = useManager();
+  const {manager} = useManager();
+
+  const searchBleDevices = async () => {
+    const permission = await requestLocationPermission();
+    const scannedDevices = [];
+
+    if (permission) {
+      console.log('Iniciando scan...');
+
+      setTimeout(() => {
+        console.log('Finalizando scan...');
+        manager.stopDeviceScan();
+        manager.destroy();
+      }, 5000);
+
+      if (manager) {
+        manager.startDeviceScan(null, null, (error, newDeviceScanned) => {
+          if (error) {
+            return console.error(error);
+          }
+
+          if (newDeviceScanned.name) {
+            !scannedDevices.find(
+              deviceScanned => deviceScanned.name == newDeviceScanned.name,
+            ) &&
+              scannedDevices.push({
+                name: newDeviceScanned.name,
+                deviceId: newDeviceScanned.id,
+              }) &&
+              console.log(scannedDevices);
+          }
+
+          setScannedDevicesState(scannedDevices);
+        });
+      }
+    }
+  };
 
   return (
     <View style={styles.Container}>
       <View style={styles.ButtonWrapper}>
-        <TouchableOpacity style={styles.Button}>
+        <TouchableOpacity style={styles.Button} onPress={searchBleDevices}>
           <Text style={styles.ButtonText}>Scan for BLE devices</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.TextWrapper}>
-        {scannedDevices.length > 0 ? (
+        {scannedDevicesState.length > 0 ? (
           <Text style={styles.ConnectedTitle}>
             Select device to try connection
           </Text>
@@ -30,7 +64,7 @@ const Home = ({navigation}) => {
       </View>
       <View style={styles.ScannedDevices}>
         <ScrollView>
-          {scannedDevices.map(({name, deviceId}, index) => (
+          {scannedDevicesState.map(({name, deviceId}, index) => (
             <TouchableOpacity style={styles.ButtonConnect} key={index}>
               <Text
                 style={styles.ButtonText}
