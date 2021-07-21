@@ -6,7 +6,10 @@ import {styles} from './styles';
 
 const Home = ({navigation}) => {
   const {setConnectedDeviceInfo} = useConnectedDeviceInfo();
-  const [scannedDevices, setScannedDevices] = useState([]);
+  const [scannedDevices, setScannedDevices] = useState([
+    {deviceId: '1d:sd:ab:3c', name: 'Exemplo'},
+    {deviceId: '1d:sd:ab:3c', name: 'Exemplo 2'},
+  ]);
   const {manager, setManager} = useManager();
 
   return (
@@ -26,7 +29,7 @@ const Home = ({navigation}) => {
         )}
       </View>
       <View style={styles.ScannedDevices}>
-        <ScrollView styles={styles.ScrollListWrapper}>
+        <ScrollView>
           {scannedDevices.map(({name, deviceId}, index) => (
             <TouchableOpacity style={styles.ButtonConnect} key={index}>
               <Text
