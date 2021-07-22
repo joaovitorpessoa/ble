@@ -7,17 +7,48 @@ import {
   TextInput,
 } from 'react-native';
 
-import {useReadMonitor} from '../../BLE/Context/ReadMonitor';
+import {discoverCharacteristics} from '../../BLE/DiscoverCharacteristics';
 import {useManager} from '../../BLE/Context/Manager';
+import {useConnectedDeviceInfo} from '../../BLE/Context/ConnectedDeviceInfo';
+import {useReadMonitor} from '../../BLE/Context/ReadMonitor';
+import {} from '../../BLE/Write';
+import {Base64} from '../../BLE/Base64';
 import {styles} from './styles';
 
 const BLEIO = () => {
+  const {connectedDeviceInfo} = useConnectedDeviceInfo();
   const {readMonitor, setReadMonitor} = useReadMonitor();
-  // const {manager} = useManager();
+  const {manager} = useManager();
 
-  // useEffect(() => {
-  //   discoverCharacteristics(manager)
-  // });
+  useEffect(async () => {
+    const deviceConnected = await manager.connectToDevice(
+      connectedDeviceInfo.deviceId,
+    );
+
+    const deviceScannedInfo = await discoverCharacteristics(deviceConnected);
+
+    console.log(deviceScannedInfo);
+
+    const [{service: serviceForRead, uuid: characteristicForRead}] =
+      deviceScannedInfo.characteristics.filter(
+        characteristic => characteristic.allowed.isNotifiable,
+      );
+
+    manager.monitorCharacteristicForDevice(
+      deviceScannedInfo.deviceId,
+      serviceForRead,
+      characteristicForRead,
+      (error, data) =>
+        // setReadMonitor(readMonitor =>
+        // readMonitor.concat(Base64.decoder(data.value)),
+        // ),
+        data && console.log(Base64.decoder(data.value)),
+    );
+
+    // setReadListeners(deviceConnected, deviceScannedInfo);
+
+    console.log('Tudo belezinha!');
+  }, []);
 
   return (
     <View style={styles.Container}>
@@ -103,11 +134,11 @@ const BLEIO = () => {
       </View>
       <View style={styles.ReadMonitorWrapper}>
         <ScrollView>
-          {false ? (
-            ['teste', 'teste1', 'teste2', 'teste3'].map((item, index) => {
+          {readMonitor.length > 0 ? (
+            readMonitor.map((item, index) => {
               return (
                 <View style={styles.ReadMonitorTextWrapper} key={index}>
-                  <Text style={styles.ReadMonitorText}>teste</Text>
+                  <Text style={styles.ReadMonitorText}>{`${item}`}</Text>
                 </View>
               );
             })

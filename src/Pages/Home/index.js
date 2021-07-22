@@ -77,7 +77,7 @@ const Home = ({navigation}) => {
               <Text
                 style={styles.ButtonText}
                 onPress={() => {
-                  setConnectedDeviceInfo(deviceId);
+                  setConnectedDeviceInfo({deviceId});
                   navigation.navigate('BLEIO');
                 }}>{`${name}`}</Text>
             </TouchableOpacity>

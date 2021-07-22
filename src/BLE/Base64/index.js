@@ -47,4 +47,4 @@ const Base64 = {
   },
 };
 
-export default Base64;
+export {Base64};
