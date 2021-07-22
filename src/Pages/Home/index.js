@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
 import {useManager} from '../../BLE/Context/Manager';
 import {useConnectedDeviceInfo} from '../../BLE/Context/ConnectedDeviceInfo';
@@ -9,10 +9,10 @@ const Home = ({navigation}) => {
   const [scannedDevicesState, setScannedDevicesState] = useState([]);
   const {setConnectedDeviceInfo} = useConnectedDeviceInfo();
   const {manager} = useManager();
+  const scannedDevices = [];
 
   const searchBleDevices = async () => {
     const permission = await requestLocationPermission();
-    const scannedDevices = [];
 
     if (permission) {
       console.log('Iniciando scan...');
@@ -30,17 +30,25 @@ const Home = ({navigation}) => {
           }
 
           if (newDeviceScanned.name) {
-            !scannedDevices.find(
-              deviceScanned => deviceScanned.name == newDeviceScanned.name,
-            ) &&
+            if (scannedDevices.length > 0) {
+              if (
+                !scannedDevices.find(
+                  deviceScanned => deviceScanned.name == newDeviceScanned.name,
+                )
+              ) {
+                scannedDevices.push({
+                  name: newDeviceScanned.name,
+                  deviceId: newDeviceScanned.id,
+                });
+                setScannedDevicesState(scannedDevices);
+              }
+            } else {
               scannedDevices.push({
                 name: newDeviceScanned.name,
                 deviceId: newDeviceScanned.id,
-              }) &&
-              console.log(scannedDevices);
+              });
+            }
           }
-
-          setScannedDevicesState(scannedDevices);
         });
       }
     }
@@ -54,7 +62,7 @@ const Home = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <View style={styles.TextWrapper}>
-        {scannedDevicesState.length > 0 ? (
+        {scannedDevices.length > 0 ? (
           <Text style={styles.ConnectedTitle}>
             Select device to try connection
           </Text>
