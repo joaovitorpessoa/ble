@@ -5,6 +5,7 @@ import {Button} from 'react-native-elements';
 import {discoverCharacteristics} from '../../BLE/DiscoverCharacteristics';
 import {useManager} from '../../BLE/Context/Manager';
 import {useConnectedDeviceInfo} from '../../BLE/Context/ConnectedDeviceInfo';
+import {Write} from '../../BLE/Write';
 import {Base64} from '../../BLE/Base64';
 import {styles} from './styles';
 
@@ -13,6 +14,7 @@ const BLEIO = () => {
     useConnectedDeviceInfo();
   const [readMonitor, setReadMonitor] = useState([]);
   const {manager} = useManager();
+  const [inputText, setInputText] = useState('');
 
   useEffect(async () => {
     console.log('Finalizando scan...');
@@ -44,6 +46,7 @@ const BLEIO = () => {
           }
 
           console.log(Base64.decoder(data['value']));
+
           return oldState.concat(Base64.decoder(data['value']));
         }),
     );
@@ -57,8 +60,14 @@ const BLEIO = () => {
           <TextInput
             style={styles.Input}
             placeholder="Enter a custom command here"
+            onChangeText={text => setInputText(text)}
+            defaultValue={inputText}
           />
-          <Button title={`${'>'}`} buttonStyle={styles.SendButton} />
+          <Button
+            title={`${'>'}`}
+            buttonStyle={styles.SendButton}
+            onPress={() => Write(manager, connectedDeviceInfo, inputText)}
+          />
         </View>
       </View>
       <View style={styles.CMDWrapper}>
