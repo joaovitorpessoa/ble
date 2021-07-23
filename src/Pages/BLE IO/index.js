@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, ScrollView, TextInput} from 'react-native';
-
 import {Button} from 'react-native-elements';
 import {discoverCharacteristics} from '../../BLE/DiscoverCharacteristics';
 import {useManager} from '../../BLE/Context/Manager';
