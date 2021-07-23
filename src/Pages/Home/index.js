@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, ScrollView} from 'react-native';
+import {Button} from 'react-native-elements';
 import {useManager} from '../../BLE/Context/Manager';
 import {useConnectedDeviceInfo} from '../../BLE/Context/ConnectedDeviceInfo';
 import {requestLocationPermission} from '../../BLE/RequestPermission';
@@ -14,15 +15,9 @@ const Home = ({navigation}) => {
   const searchBleDevices = async () => {
     const permission = await requestLocationPermission();
 
+    console.log('Iniciando scan...');
+
     if (permission) {
-      console.log('Iniciando scan...');
-
-      setTimeout(() => {
-        console.log('Finalizando scan...');
-        manager.stopDeviceScan();
-        manager.destroy();
-      }, 5000);
-
       if (manager) {
         manager.startDeviceScan(null, null, (error, newDeviceScanned) => {
           if (error) {
@@ -30,23 +25,42 @@ const Home = ({navigation}) => {
           }
 
           if (newDeviceScanned.name) {
-            if (scannedDevices.length > 0) {
-              if (
-                !scannedDevices.find(
-                  deviceScanned => deviceScanned.name == newDeviceScanned.name,
-                )
-              ) {
+            if (scannedDevices.length === 0) {
+              const deviceAlreadyScanned = scannedDevices.find(
+                deviceScanned => deviceScanned.name == newDeviceScanned.name,
+              );
+
+              if (deviceAlreadyScanned === undefined) {
                 scannedDevices.push({
                   name: newDeviceScanned.name,
                   deviceId: newDeviceScanned.id,
                 });
-                setScannedDevicesState(scannedDevices);
               }
+
+              setScannedDevicesState(oldState =>
+                oldState.concat({
+                  name: newDeviceScanned.name,
+                  deviceId: newDeviceScanned.id,
+                }),
+              );
             } else {
-              scannedDevices.push({
-                name: newDeviceScanned.name,
-                deviceId: newDeviceScanned.id,
-              });
+              const deviceAlreadyScanned = scannedDevices.find(
+                deviceScanned => deviceScanned.name == newDeviceScanned.name,
+              );
+
+              if (deviceAlreadyScanned === undefined) {
+                scannedDevices.push({
+                  name: newDeviceScanned.name,
+                  deviceId: newDeviceScanned.id,
+                });
+
+                setScannedDevicesState(oldState =>
+                  oldState.concat({
+                    name: newDeviceScanned.name,
+                    deviceId: newDeviceScanned.id,
+                  }),
+                );
+              }
             }
           }
         });
@@ -57,30 +71,34 @@ const Home = ({navigation}) => {
   return (
     <View style={styles.Container}>
       <View style={styles.ButtonWrapper}>
-        <TouchableOpacity style={styles.Button} onPress={searchBleDevices}>
-          <Text style={styles.ButtonText}>Scan for BLE devices</Text>
-        </TouchableOpacity>
+        <Button
+          title="Start scan for BLE devices"
+          onPress={searchBleDevices}
+          buttonStyle={styles.ScanButton}
+        />
       </View>
       <View style={styles.TextWrapper}>
-        {scannedDevices.length > 0 ? (
+        {scannedDevicesState.length === 0 ? (
+          <Text style={styles.ConnectedTitle}>No devices found</Text>
+        ) : (
           <Text style={styles.ConnectedTitle}>
             Select device to try connection
           </Text>
-        ) : (
-          <Text style={styles.ConnectedTitle}>No devices found</Text>
         )}
       </View>
       <View style={styles.ScannedDevices}>
         <ScrollView>
           {scannedDevicesState.map(({name, deviceId}, index) => (
-            <TouchableOpacity style={styles.ButtonConnect} key={index}>
-              <Text
-                style={styles.ButtonText}
-                onPress={() => {
-                  setConnectedDeviceInfo({deviceId});
-                  navigation.navigate('BLEIO');
-                }}>{`${name}`}</Text>
-            </TouchableOpacity>
+            <Button
+              title={`${name}`}
+              onPress={() => {
+                setConnectedDeviceInfo({deviceId});
+                navigation.navigate('BLEIO');
+              }}
+              type="outline"
+              buttonStyle={styles.DeviceButton}
+              key={index}
+            />
           ))}
         </ScrollView>
       </View>

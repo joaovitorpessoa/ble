@@ -22,8 +22,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 15,
     width: 300,
+    height: 60,
   },
   SendButton: {
+    height: 60,
     paddingHorizontal: 20,
     backgroundColor: '#6b96be',
     borderRadius: 20,

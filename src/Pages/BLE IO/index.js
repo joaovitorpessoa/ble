@@ -1,33 +1,32 @@
-import React, {useEffect} from 'react';
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Text, View, ScrollView, TextInput} from 'react-native';
 
+import {Button} from 'react-native-elements';
 import {discoverCharacteristics} from '../../BLE/DiscoverCharacteristics';
 import {useManager} from '../../BLE/Context/Manager';
 import {useConnectedDeviceInfo} from '../../BLE/Context/ConnectedDeviceInfo';
-import {useReadMonitor} from '../../BLE/Context/ReadMonitor';
-import {} from '../../BLE/Write';
 import {Base64} from '../../BLE/Base64';
 import {styles} from './styles';
 
 const BLEIO = () => {
-  const {connectedDeviceInfo} = useConnectedDeviceInfo();
-  const {readMonitor, setReadMonitor} = useReadMonitor();
+  const {connectedDeviceInfo, setConnectedDeviceInfo} =
+    useConnectedDeviceInfo();
+  const [readMonitor, setReadMonitor] = useState([]);
   const {manager} = useManager();
 
   useEffect(async () => {
+    console.log('Finalizando scan...');
+    manager.stopDeviceScan();
+
     const deviceConnected = await manager.connectToDevice(
       connectedDeviceInfo.deviceId,
     );
 
     const deviceScannedInfo = await discoverCharacteristics(deviceConnected);
 
-    console.log(deviceScannedInfo);
+    console.log('Características descobertas!');
+
+    setConnectedDeviceInfo(deviceScannedInfo);
 
     const [{service: serviceForRead, uuid: characteristicForRead}] =
       deviceScannedInfo.characteristics.filter(
@@ -39,15 +38,15 @@ const BLEIO = () => {
       serviceForRead,
       characteristicForRead,
       (error, data) =>
-        // setReadMonitor(readMonitor =>
-        // readMonitor.concat(Base64.decoder(data.value)),
-        // ),
-        data && console.log(Base64.decoder(data.value)),
+        setReadMonitor(oldState => {
+          if (!data['value']) {
+            throw new Error('ble device is not connected to manager');
+          }
+
+          console.log(Base64.decoder(data['value']));
+          return oldState.concat(Base64.decoder(data['value']));
+        }),
     );
-
-    // setReadListeners(deviceConnected, deviceScannedInfo);
-
-    console.log('Tudo belezinha!');
   }, []);
 
   return (
@@ -59,89 +58,64 @@ const BLEIO = () => {
             style={styles.Input}
             placeholder="Enter a custom command here"
           />
-          <TouchableOpacity style={styles.SendButton}>
-            <Text style={styles.SendButtonText}>{`${'>'}`}</Text>
-          </TouchableOpacity>
+          <Button title={`${'>'}`} buttonStyle={styles.SendButton} />
         </View>
       </View>
       <View style={styles.CMDWrapper}>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text style={styles.CMDButtonText}>{`${'{"cmd":"hello"}'}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text style={styles.CMDButtonText}>{`${'{"displayNro":2345}'}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text
-            style={
-              styles.CMDButtonText
-            }>{`${'{"pswd":12323445, "cmd":"tare"}'}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text
-            style={
-              styles.CMDButtonText
-            }>{`${'{"pswd":12323445, "cmd":"weight"}'}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text
-            style={
-              styles.CMDButtonText
-            }>{`${'{"pswd":12323445, "targetAbsWeight":1234.5}'}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text
-            style={
-              styles.CMDButtonText
-            }>{`${'{"pswd":12323445, "targetRelWeight":123}'}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text
-            style={
-              styles.CMDButtonText
-            }>{`${'{"pswd":12323445, "beep":50}'}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text
-            style={
-              styles.CMDButtonText
-            }>{`${'{"pswd":12323445, "sound":1}'}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text
-            style={
-              styles.CMDButtonText
-            }>{`${'{"pswd":12323445, "timer":600}'}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text
-            style={
-              styles.CMDButtonText
-            }>{`${'{"pswd":12323445, "timerSound":3, "timerNum":2, "timer":300}'}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text
-            style={
-              styles.CMDButtonText
-            }>{`${'{"pswd":12323445, "cmd":"timerList"}'}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.CMDButton}>
-          <Text
-            style={
-              styles.CMDButtonText
-            }>{`${'{"pswd":12323445, "newName":"confeitaria 1"}'}`}</Text>
-        </TouchableOpacity>
+        <Button title={`${'{"cmd":"hello"}'}`} buttonStyle={styles.CMDButton} />
+        <Button
+          title={`${'{"displayNro":2345}'}`}
+          buttonStyle={styles.CMDButton}
+        />
+        <Button
+          title={`${'{"pswd":12323445, "cmd":"tare"}'}`}
+          buttonStyle={styles.CMDButton}
+        />
+        <Button
+          title={`${'{"pswd":12323445, "cmd":"weight"}'}`}
+          buttonStyle={styles.CMDButton}
+        />
+        <Button
+          title={`${'{"pswd":12323445, "targetAbsWeight":1234.5}'}`}
+          buttonStyle={styles.CMDButton}
+        />
+        <Button
+          title={`${'{"pswd":12323445, "targetRelWeight":123}'}`}
+          buttonStyle={styles.CMDButton}
+        />
+        <Button
+          title={`${'{"pswd":12323445, "beep":50}'}`}
+          buttonStyle={styles.CMDButton}
+        />
+        <Button
+          title={`${'{"pswd":12323445, "sound":1}'}`}
+          buttonStyle={styles.CMDButton}
+        />
+        <Button
+          title={`${'{"pswd":12323445, "timer":600}'}`}
+          buttonStyle={styles.CMDButton}
+        />
+        <Button
+          title={`${'{"pswd":12323445, "timerSound":3, "timerNum":2, "timer":300}'}`}
+          buttonStyle={styles.CMDButton}
+        />
+        <Button
+          title={`${'{"pswd":12323445, "cmd":"timerList"}'}`}
+          buttonStyle={styles.CMDButton}
+        />
+        <Button
+          title={`${'{"pswd":12323445, "newName":"confeitaria 1"}'}`}
+          buttonStyle={styles.CMDButton}
+        />
       </View>
       <View style={styles.ReadMonitorWrapper}>
         <ScrollView>
-          {readMonitor.length > 0 ? (
-            readMonitor.map((item, index) => {
-              return (
-                <View style={styles.ReadMonitorTextWrapper} key={index}>
-                  <Text style={styles.ReadMonitorText}>{`${item}`}</Text>
-                </View>
-              );
-            })
+          {readMonitor && readMonitor.length > 0 ? (
+            readMonitor.map((item, index) => (
+              <View style={styles.ReadMonitorTextWrapper} key={index}>
+                <Text style={styles.ReadMonitorText}>{`${item}`}</Text>
+              </View>
+            ))
           ) : (
             <Text style={styles.CMDEmptyText}>Nothing read</Text>
           )}

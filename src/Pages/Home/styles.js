@@ -19,18 +19,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  Button: {
-    padding: 20,
-    backgroundColor: '#00A1CF',
-    borderRadius: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  ButtonText: {
-    fontSize: 15,
-    color: '#fff',
-    fontWeight: 'normal',
-  },
   ConnectedTitle: {
     fontSize: 20,
     color: '#aaa',
@@ -41,14 +29,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  ButtonConnect: {
+  ScanButton: {
     margin: 10,
-    padding: 20,
-    backgroundColor: '#a1bed7',
+    padding: 15,
+    backgroundColor: '#6b96be',
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 100,
+  },
+  DeviceButton: {
+    margin: 10,
+    padding: 15,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
