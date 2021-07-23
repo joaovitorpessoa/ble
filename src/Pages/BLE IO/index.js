@@ -71,50 +71,103 @@ const BLEIO = () => {
         </View>
       </View>
       <View style={styles.CMDWrapper}>
-        <Button title={`${'{"cmd":"hello"}'}`} buttonStyle={styles.CMDButton} />
+        <Button
+          title={`${'{"cmd":"hello"}'}`}
+          buttonStyle={styles.CMDButton}
+          onPress={() => Write(manager, connectedDeviceInfo, '{"cmd":"hello"}')}
+        />
         <Button
           title={`${'{"displayNro":2345}'}`}
           buttonStyle={styles.CMDButton}
+          onPress={() =>
+            Write(manager, connectedDeviceInfo, '{"displayNro":2345}')
+          }
         />
         <Button
-          title={`${'{"pswd":12323445, "cmd":"tare"}'}`}
+          title={`${'{"pswd":0, "cmd":"tare"}'}`}
           buttonStyle={styles.CMDButton}
+          onPress={() =>
+            Write(manager, connectedDeviceInfo, '{"pswd":0, "cmd":"tare"}')
+          }
         />
         <Button
-          title={`${'{"pswd":12323445, "cmd":"weight"}'}`}
+          title={`${'{"pswd":0, "cmd":"weight"}'}`}
           buttonStyle={styles.CMDButton}
+          onPress={() =>
+            Write(manager, connectedDeviceInfo, '{"pswd":0, "cmd":"weight"}')
+          }
         />
         <Button
-          title={`${'{"pswd":12323445, "targetAbsWeight":1234.5}'}`}
+          title={`${'{"pswd":0, "targetAbsWeight":1234.5}'}`}
           buttonStyle={styles.CMDButton}
+          onPress={() =>
+            Write(
+              manager,
+              connectedDeviceInfo,
+              '{"pswd":0, "targetAbsWeight":1234.5}',
+            )
+          }
         />
         <Button
-          title={`${'{"pswd":12323445, "targetRelWeight":123}'}`}
+          title={`${'{"pswd":0, "targetRelWeight":123}'}`}
           buttonStyle={styles.CMDButton}
+          onPress={() =>
+            Write(
+              manager,
+              connectedDeviceInfo,
+              '{"pswd":0, "targetRelWeight":123}',
+            )
+          }
         />
         <Button
-          title={`${'{"pswd":12323445, "beep":50}'}`}
+          title={`${'{"pswd":0, "beep":50}'}`}
           buttonStyle={styles.CMDButton}
+          onPress={() =>
+            Write(manager, connectedDeviceInfo, '{"pswd":0, "beep":50}')
+          }
         />
         <Button
-          title={`${'{"pswd":12323445, "sound":1}'}`}
+          title={`${'{"pswd":0, "sound":1}'}`}
           buttonStyle={styles.CMDButton}
+          onPress={() =>
+            Write(manager, connectedDeviceInfo, '{"pswd":0, "sound":1}')
+          }
         />
         <Button
-          title={`${'{"pswd":12323445, "timer":600}'}`}
+          title={`${'{"pswd":0, "timer":600}'}`}
           buttonStyle={styles.CMDButton}
+          onPress={() =>
+            Write(manager, connectedDeviceInfo, '{"pswd":0, "timer":600}')
+          }
         />
         <Button
-          title={`${'{"pswd":12323445, "timerSound":3, "timerNum":2, "timer":300}'}`}
+          title={`${'{"pswd":0, "timerSound":3, "timerNum":2, "timer":300}'}`}
           buttonStyle={styles.CMDButton}
+          onPress={() =>
+            Write(
+              manager,
+              connectedDeviceInfo,
+              '{"pswd":0, "timerSound":3, "timerNum":2, "timer":300}',
+            )
+          }
         />
         <Button
-          title={`${'{"pswd":12323445, "cmd":"timerList"}'}`}
+          title={`${'{"pswd":0, "cmd":"timerList"}'}`}
           buttonStyle={styles.CMDButton}
+          onPress={() =>
+            Write(manager, connectedDeviceInfo, '{"pswd":0, "cmd":"timerList"}')
+          }
         />
         <Button
-          title={`${'{"pswd":12323445, "newName":"confeitaria 1"}'}`}
+          title={`${'{"pswd":0, "newName":"confeitaria 1"}'}`}
           buttonStyle={styles.CMDButton}
+          onPress={() =>
+            Write(
+              manager,
+              connectedDeviceInfo,
+              '{"pswd":0, "newName":"confeitaria 1"}',
+            )
+          }
         />
       </View>
       <View style={styles.ReadMonitorWrapper}>
