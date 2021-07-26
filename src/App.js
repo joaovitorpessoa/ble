@@ -1,10 +1,11 @@
 import React from 'react';
-import ManagerProvider from './BLE/Context/Manager';
-import ConnectedDeviceInfoProvider from './BLE/Context/ConnectedDeviceInfo';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Home from './Pages/Home';
-import BLEIO from './Pages/BLE IO';
+
+import {ManagerProvider} from './BLE';
+import {ConnectedDeviceInfoProvider} from './BLE';
+
+import {Home, BLEIO} from './Pages';
 
 const Stack = createStackNavigator();
 

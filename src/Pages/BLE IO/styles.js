@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 50,
   },
   CMDButton: {
     margin: 10,

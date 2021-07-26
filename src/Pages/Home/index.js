@@ -1,16 +1,38 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, ScrollView} from 'react-native';
 import {Button} from 'react-native-elements';
-import {useManager} from '../../BLE/Context/Manager';
-import {useConnectedDeviceInfo} from '../../BLE/Context/ConnectedDeviceInfo';
-import {requestLocationPermission} from '../../BLE/RequestPermission';
+import {useIsFocused} from '@react-navigation/native';
+
+import {
+  useManager,
+  requestLocationPermission,
+  useConnectedDeviceInfo,
+} from '../../BLE';
+
 import {styles} from './styles';
 
-const Home = ({navigation}) => {
-  const [scannedDevicesState, setScannedDevicesState] = useState([]);
-  const {setConnectedDeviceInfo} = useConnectedDeviceInfo();
+const Home = props => {
   const {manager} = useManager();
-  const scannedDevices = [];
+  const {connectedDeviceInfo, setConnectedDeviceInfo} =
+    useConnectedDeviceInfo();
+
+  const [scannedDevicesState, setScannedDevicesState] = useState([]);
+
+  let scannedDevices = [];
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      if (connectedDeviceInfo.deviceId) {
+        console.log(`Desconectando de ${connectedDeviceInfo.deviceId}...`);
+        manager.cancelDeviceConnection(connectedDeviceInfo.deviceId);
+        scannedDevices = [];
+        setConnectedDeviceInfo(undefined);
+        setScannedDevicesState([]);
+      }
+    }
+  }, [props, isFocused]);
 
   const searchBleDevices = async () => {
     const permission = await requestLocationPermission();
@@ -93,7 +115,7 @@ const Home = ({navigation}) => {
               title={`${name}`}
               onPress={() => {
                 setConnectedDeviceInfo({deviceId});
-                navigation.navigate('BLEIO');
+                props.navigation.navigate('BLEIO');
               }}
               type="outline"
               buttonStyle={styles.DeviceButton}
