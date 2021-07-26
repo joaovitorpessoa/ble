@@ -21,7 +21,7 @@ Esse projeto tem como objetivo realizar um fluxo completo de comunicação utili
 
 ### 💡 Resultado em 26/07/2021
 
-![""](/docs/cli_screenshot.png)
+![""](/docs/ble-app-screens.png)
 
 ## 🏃 Uso
 
