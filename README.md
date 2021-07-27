@@ -26,19 +26,19 @@ Esse projeto tem como objetivo realizar um fluxo completo de comunicação utili
 ## 🏃 Uso
 
 ```bash
-    // Clonar repositório
+    # Clonar repositório
     $ git clone https://github.com/joaovitorpessoa/ble
 
-    // Acessar diretório
+    # Acessar diretório
     $ cd ble
 
-    // Instalar dependências
+    # Instalar dependências
     $ npm install
 
-    // Iniciar projeto em modo debug (desenvolvimento)
+    # Iniciar projeto em modo debug (desenvolvimento)
     $ npx react-native run-android
     
-    // Ou simplesmente instalar o apk do último build do repositório
+    # Ou simplesmente instalar o apk do último build do repositório
     $ cd dist
 ```
 
