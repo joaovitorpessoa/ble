@@ -35,8 +35,11 @@ Esse projeto tem como objetivo realizar um fluxo completo de comunicação utili
     // Instalar dependências
     $ npm install
 
-    // Iniciar projeto
+    // Iniciar projeto em modo debug (desenvolvimento)
     $ npx react-native run-android
+    
+    // Ou simplesmente instalar o apk do último build do repositório
+    $ cd dist
 ```
 
 ---
