@@ -19,7 +19,7 @@ Esse projeto tem como objetivo realizar um fluxo completo de comunicação utili
 - [React Native Elements](https://reactnativeelements.com/)
 - [React Native BLE PLX](https://github.com/dotintent/react-native-ble-plx)
 
-### 💡 Resultado em 26/07/2021
+## 💡 Resultado em 26/07/2021
 
 ![""](/docs/ble-app-screens.png)
 
